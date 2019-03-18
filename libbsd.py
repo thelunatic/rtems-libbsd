@@ -682,6 +682,48 @@ class mmc_ti(builder.Module):
         )
 
 #
+#fb_ti
+#
+class fb_ti(builder.Module):
+
+    def __init__(self, manager):
+        super(fb_ti, self).__init__(manager, type(self).__name__)
+
+    def generate(self):
+        mm = self.manager
+        self.addKernelSpaceHeaderFiles(
+            [
+               'sys/sys/kernel.h',
+               'sys/sys/module.h',
+               'sys/sys/clock.h',
+               'sys/sys/bus.h',
+               'sys/sys/rman.h',
+               'sys/dev/iicbus/iicbus.h',
+               'sys/dev/iicbus/iiconf.h',
+               'sys/dev/iicbus/iic.h',
+               'sys/dev/ofw/openfirm.h',
+               'sys/dev/ofw/ofw_bus.h',
+               'sys/dev/ofw/ofw_bus_subr.h',
+               'sys/dev/videomode/videomode.h',
+               'sys/dev/videomode/edidvar.h',
+               'sys/dev/videomode/ediddevs.h',
+               'sys/dev/videomode/edidreg.h',
+               'sys/dev/videomode/vesagtf.h',   
+               'sys/dev/videomode/ediddevs_data.h',
+            ]
+        )
+        self.addKernelSpaceSourceFiles(
+            [
+                'sys/arm/ti/am335x/tda19988.c',
+                'sys/dev/videomode/videomode.c',
+                'sys/dev/videomode/edid.c'
+            ],
+            mm.generator['source']()
+        )
+
+
+
+#
 # Input
 #
 class dev_input(builder.Module):
@@ -4960,6 +5002,7 @@ def load(mm):
     mm.addModule(mmc_ti(mm))
     mm.addModule(dev_input(mm))
     mm.addModule(evdev(mm))
+    mm.addModule(fb_ti(mm))
 
     mm.addModule(dev_usb(mm))
     mm.addModule(dev_usb_controller(mm))
