@@ -13,3 +13,4 @@ testsuite/include/rtems/bsd/test/network-config.h
 .lock-waf*
 .waf*
 build
+.waf*
