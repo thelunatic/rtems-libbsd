@@ -697,6 +697,9 @@ class fb_ti(builder.Module):
                'sys/sys/module.h',
                'sys/sys/clock.h',
                'sys/sys/bus.h',
+               'sys/sys/fbio.h',
+               'sys/sys/consio.h',
+               'sys/arm/ti/am335x/am335x_lcd.h',
                'sys/sys/rman.h',
                'sys/dev/iicbus/iicbus.h',
                'sys/dev/iicbus/iiconf.h',
@@ -710,13 +713,23 @@ class fb_ti(builder.Module):
                'sys/dev/videomode/edidreg.h',
                'sys/dev/videomode/vesagtf.h',   
                'sys/dev/videomode/ediddevs_data.h',
+               'sys/dev/fb/fbreg.h',
+               'sys/dev/syscons/syscons.h',
+               'sys/dev/vt/vt.h',
+               'sys/sys/terminal.h',
+               'sys/teken/teken.h',
+               'sys/arm/ti/am335x/am335x_pwm.h',
             ]
         )
         self.addKernelSpaceSourceFiles(
             [
                 'sys/arm/ti/am335x/tda19988.c',
                 'sys/dev/videomode/videomode.c',
-                'sys/dev/videomode/edid.c'
+                'sys/dev/videomode/edid.c',
+                'sys/arm/ti/am335x/am335x_lcd.c',
+                'sys/arm/ti/am335x/am335x_lcd_syscons.c',
+                'sys/dev/videomode/modelines.c',
+
             ],
             mm.generator['source']()
         )
