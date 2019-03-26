@@ -728,7 +728,17 @@ class fb_ti(builder.Module):
                 'sys/dev/videomode/edid.c',
                 'sys/arm/ti/am335x/am335x_lcd.c',
                 'sys/arm/ti/am335x/am335x_lcd_syscons.c',
+                'sys/arm/ti/am335x/am335x_ecap.c',
                 'sys/dev/videomode/modelines.c',
+                'sys/dev/iicbus/iicbus.c',
+                'sys/dev/iicbus/iic.c',
+                'sys/dev/iicbus/iicbus_if.c',
+                'sys/dev/iicbus/iiconf.c',
+                'sys/dev/fb/fb.c',
+                'sys/dev/videomode/vesagtf.c',
+                'sys/dev/hdmi/hdmi_if.c',
+                'sys/dev/fb/fb_if.c',
+                'sys/dev/videomode/pickmode.c',
 
             ],
             mm.generator['source']()
