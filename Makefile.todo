@@ -6,6 +6,8 @@ LOCAL_INC = rtemsbsd/include/rtems/bsd/local
 
 LOCAL_SRC = rtemsbsd/local
 
+VIDEOMODE = sys/dev/videomode
+
 FREEBSD_SRC = freebsd-org
 
 TOOLS = freebsd-org/sys/tools
@@ -43,7 +45,9 @@ GENERATED += $(LOCAL_SRC)/rtwn-rtl8188eufw.c
 GENERATED += $(LOCAL_SRC)/runfw.c
 GENERATED += $(LOCAL_INC)/sdhci_if.h
 GENERATED += $(LOCAL_SRC)/sdhci_if.c
-GENERATED += $(LOCAL_INC)/gpiobus_if.h
+GENERATED += $(LOCAL_INC)/fb_if.h
+GENERATED += $(LOCAL_SRC)/fb_if.c
+GENERATED += $(LOCAL_SRC)/gpiobus_if.h
 GENERATED += $(LOCAL_SRC)/gpiobus_if.c
 GENERATED += rtemsbsd/include/machine/rtems-bsd-regdomain.h
 GENERATED += rtemsbsd/rtems/rtems-bsd-regdomain.c
@@ -214,6 +218,28 @@ $(LOCAL_SRC)/gpiobus_if.c: $(FREEBSD_SRC)/sys/dev/gpio/gpiobus_if.m
 	    -e '1 i\#include <machine/rtems-bsd-kernel-space.h>\n' \
 	    -e 's|#include "gpiobus_if.h"|#include <rtems/bsd/local/gpiobus_if.h>|'
 	mv gpiobus_if.c $@
+
+$(LOCAL_INC)/fb_if.h: $(FREEBSD_SRC)/sys/dev/fb/fb_if.m
+	awk -f $(TOOLS)/makeobjops.awk $< -h
+	mv fb_if.h $@
+
+$(LOCAL_SRC)/fb_if.c: $(FREEBSD_SRC)/sys/dev/fb/fb_if.m
+	awk -f $(TOOLS)/makeobjops.awk $< -c
+	sed -i fb_if.c \
+	    -e '1 i\#include <machine/rtems-bsd-kernel-space.h>\n' \
+	    -e 's|#include "fb_if.h"|#include <rtems/bsd/local/fb_if.h>|'
+	mv fb_if.c $@
+
+$(LOCAL_INC)/hdmi_if.h: $(FREEBSD_SRC)/sys/dev/hdmi/hdmi_if.m
+	awk -f $(TOOLS)/makeobjops.awk $< -h
+	mv hdmi_if.h $@
+
+$(LOCAL_SRC)/hdmi_if.c: $(FREEBSD_SRC)/sys/dev/hdmi/hdmi_if.m
+	awk -f $(TOOLS)/makeobjops.awk $< -c
+	sed -i hdmi_if.c \
+	    -e '1 i\#include <machine/rtems-bsd-kernel-space.h>\n' \
+	    -e 's|#include "hdmi_if.h"|#include <rtems/bsd/local/hdmi_if.h>|'
+	mv hdmi_if.c $@
 
 $(LOCAL_INC)/sdhci_if.h: $(FREEBSD_SRC)/sys/dev/sdhci/sdhci_if.m
 	awk -f $(TOOLS)/makeobjops.awk $< -h
