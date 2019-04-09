@@ -682,6 +682,57 @@ class mmc_ti(builder.Module):
         )
 
 #
+# FB
+#
+class fb_ti(builder.Module):
+
+    def __init__(self, manager):
+        super(fb_ti, self).__init__(manager, type(self).__name__)
+
+    def generate(self):
+        mm = self.manager
+        self.addKernelSpaceHeaderFiles(
+            [
+                'sys/sys/fbio.h',
+                'sys/sys/consio.h',
+                'sys/sys/terminal.h',
+                'sys/dev/fb/fbreg.h',
+                'sys/dev/videomode/videomode.h',
+                'sys/dev/syscons/syscons.h',
+                'sys/dev/videomode/edidvar.h',
+                'sys/dev/videomode/edidreg.h',
+                'sys/dev/videomode/ediddevs.h',
+                'sys/dev/videomode/ediddevs_data.h',
+                'sys/dev/videomode/vesagtf.h',
+                'sys/dev/vt/vt.h',
+                'sys/arm/ti/am335x/am335x_lcd.h',
+                'sys/arm/ti/am335x/am335x_pwm.h',
+            ]
+        )
+        self.addKernelSpaceSourceFiles(
+            [
+                'sys/dev/fb/fb.c',
+                'sys/arm/ti/am335x/am335x_lcd.c',
+                'sys/arm/ti/am335x/am335x_lcd_syscons.c',
+                'sys/arm/ti/am335x/am335x_pwmss.c',
+                'sys/arm/ti/am335x/am335x_ecap.c',
+                'sys/dev/videomode/pickmode.c',
+                'sys/dev/videomode/edid.c',
+                'sys/dev/videomode/vesagtf.c',
+                'sys/dev/videomode/videomode.c',
+
+            ],
+            mm.generator['source']()
+        )
+        self.addRTEMSSourceFiles(
+            [
+                'local/fb_if.c',
+                'local/hdmi_if.c',
+            ],
+            mm.generator['source']()
+        )
+
+#
 # Input
 #
 class dev_input(builder.Module):
@@ -5049,6 +5100,7 @@ def load(mm):
     mm.addModule(tty(mm))
     mm.addModule(mmc(mm))
     mm.addModule(mmc_ti(mm))
+    mm.addModule(fb_ti(mm))
     mm.addModule(dev_input(mm))
     mm.addModule(evdev(mm))
 
