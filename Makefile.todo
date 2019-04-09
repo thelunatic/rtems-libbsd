@@ -241,6 +241,28 @@ $(LOCAL_SRC)/hdmi_if.c: $(FREEBSD_SRC)/sys/dev/hdmi/hdmi_if.m
 	    -e 's|#include "hdmi_if.h"|#include <rtems/bsd/local/hdmi_if.h>|'
 	mv hdmi_if.c $@
 
+$(LOCAL_INC)/iicbus_if.h: $(FREEBSD_SRC)/sys/dev/iicbus/iicbus_if.m
+	awk -f $(TOOLS)/makeobjops.awk $< -h
+	mv iicbus_if.h $@
+
+$(LOCAL_SRC)/iicbus_if.c: $(FREEBSD_SRC)/sys/dev/iicbus/iicbus_if.m
+	awk -f $(TOOLS)/makeobjops.awk $< -c
+	sed -i iicbus_if.c \
+	    -e '1 i\#include <machine/rtems-bsd-kernel-space.h>\n' \
+	    -e 's|#include "iicbus_if.h"|#include <rtems/bsd/local/iicbus_if.h>|'
+	mv iicbus_if.c $@
+
+$(LOCAL_INC)/clknode_if.h: $(FREEBSD_SRC)/sys/dev/extres/clk/clknode_if.m
+	awk -f $(TOOLS)/makeobjops.awk $< -h
+	mv clknode_if.h $@
+
+$(LOCAL_SRC)/clknode_if.c: $(FREEBSD_SRC)/sys/dev/extres/clk/clknode_if.m
+	awk -f $(TOOLS)/makeobjops.awk $< -c
+	sed -i clknode_if.c \
+	    -e '1 i\#include <machine/rtems-bsd-kernel-space.h>\n' \
+	    -e 's|#include "clknode_if.h"|#include <rtems/bsd/local/clknode_if.h>|'
+	mv clknode_if.c $@
+
 $(LOCAL_INC)/sdhci_if.h: $(FREEBSD_SRC)/sys/dev/sdhci/sdhci_if.m
 	awk -f $(TOOLS)/makeobjops.awk $< -h
 	mv sdhci_if.h $@

@@ -697,6 +697,10 @@ class fb_ti(builder.Module):
                 'sys/sys/consio.h',
                 'sys/sys/terminal.h',
                 'sys/dev/fb/fbreg.h',
+                'sys/dev/iicbus/iicbus.h',
+                'sys/dev/iicbus/iiconf.h',
+                'sys/dev/iicbus/iic.h',
+                'sys/dev/extres/clk/clk.h',
                 'sys/dev/videomode/videomode.h',
                 'sys/dev/syscons/syscons.h',
                 'sys/dev/videomode/edidvar.h',
@@ -704,6 +708,9 @@ class fb_ti(builder.Module):
                 'sys/dev/videomode/ediddevs.h',
                 'sys/dev/videomode/ediddevs_data.h',
                 'sys/dev/videomode/vesagtf.h',
+                'sys/dev/hdmi/dwc_hdmi.h',
+                'sys/dev/hdmi/dwc_hdmireg.h',
+                'sys/dev/extres/clk/clk.h',
                 'sys/dev/vt/vt.h',
                 'sys/arm/ti/am335x/am335x_lcd.h',
                 'sys/arm/ti/am335x/am335x_pwm.h',
@@ -716,11 +723,17 @@ class fb_ti(builder.Module):
                 'sys/arm/ti/am335x/am335x_lcd_syscons.c',
                 'sys/arm/ti/am335x/am335x_pwmss.c',
                 'sys/arm/ti/am335x/am335x_ecap.c',
+                'sys/arm/ti/am335x/tda19988.c',
+                'sys/dev/iicbus/iicbus.c',
+                'sys/dev/iicbus/iic.c',
+                'sys/dev/iicbus/iiconf.c',
                 'sys/dev/videomode/pickmode.c',
                 'sys/dev/videomode/edid.c',
                 'sys/dev/videomode/vesagtf.c',
                 'sys/dev/videomode/videomode.c',
-
+                'sys/dev/hdmi/dwc_hdmi.c',
+                'sys/dev/hdmi/dwc_hdmi_fdt.c',
+                'sys/dev/extres/clk/clk.c',
             ],
             mm.generator['source']()
         )
@@ -728,6 +741,8 @@ class fb_ti(builder.Module):
             [
                 'local/fb_if.c',
                 'local/hdmi_if.c',
+                'local/iicbus_if.c',
+                'local/clknode_if.c',
             ],
             mm.generator['source']()
         )
