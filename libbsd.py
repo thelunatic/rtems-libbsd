@@ -770,6 +770,7 @@ class iic(builder.Module):
         self.addRTEMSSourceFiles(
             [
                 'local/iicbus_if.c',
+                'i2c/rtems-i2c.c',
             ],
             mm.generator['source']()
         )
