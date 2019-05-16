@@ -742,6 +742,39 @@ class evdev(builder.Module):
         )
 
 #
+# IIC
+#
+class iic(builder.Module):
+
+    def __init__(self, manager):
+        super(iic, self).__init__(manager, type(self).__name__)
+
+    def generate(self):
+        mm = self.manager
+        self.addKernelSpaceHeaderFiles(
+            [
+                'sys/dev/iicbus/iicbus.h',
+                'sys/dev/iicbus/iic.h',
+                'sys/dev/iicbus/iiconf.h',
+            ]
+        )
+        self.addKernelSpaceSourceFiles(
+            [
+                'sys/dev/iicbus/iic.c',
+                'sys/dev/iicbus/iicbus.c',
+                'sys/dev/iicbus/iiconf.c',
+                'sys/dev/iicbus/ofw_iicbus.c',
+            ],
+            mm.generator['source']()
+        )
+        self.addRTEMSSourceFiles(
+            [
+                'local/iicbus_if.c',
+            ],
+            mm.generator['source']()
+        )
+ 
+#
 # USB
 #
 class dev_usb(builder.Module):
@@ -5096,6 +5129,7 @@ def load(mm):
     mm.addModule(mmc_ti(mm))
     mm.addModule(dev_input(mm))
     mm.addModule(evdev(mm))
+    mm.addModule(iic(mm))
 
     mm.addModule(dev_usb(mm))
     mm.addModule(dev_usb_controller(mm))
