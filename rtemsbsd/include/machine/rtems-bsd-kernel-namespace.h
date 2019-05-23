@@ -1991,6 +1991,8 @@
 #define	igmp_mtx _bsd_igmp_mtx
 #define	igmp_slowtimo _bsd_igmp_slowtimo
 #define	iic2errno _bsd_iic2errno
+#define	iicbb_devclass _bsd_iicbb_devclass
+#define	iicbb_driver _bsd_iicbb_driver
 #define	iicbus_block_read _bsd_iicbus_block_read
 #define	iicbus_block_write _bsd_iicbus_block_write
 #define	iicbus_devclass _bsd_iicbus_devclass
@@ -5064,6 +5066,9 @@
 #define	tty_wait_background _bsd_tty_wait_background
 #define	tty_wakeup _bsd_tty_wakeup
 #define	tvtohz _bsd_tvtohz
+#define	twsi_attach _bsd_twsi_attach
+#define	twsi_detach _bsd_twsi_detach
+#define	twsi_driver _bsd_twsi_driver
 #define	ucom_attach _bsd_ucom_attach
 #define	ucom_cfg_is_gone _bsd_ucom_cfg_is_gone
 #define	ucom_cnops _bsd_ucom_cnops

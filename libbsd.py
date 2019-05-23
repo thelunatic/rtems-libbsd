@@ -757,6 +757,8 @@ class iic(builder.Module):
                 'sys/dev/iicbus/iicbus.h',
                 'sys/dev/iicbus/iic.h',
                 'sys/dev/iicbus/iiconf.h',
+                'sys/dev/iicbus/twsi/twsi.h',
+                'sys/dev/smbus/smbconf.h',
             ]
         )
         self.addKernelSpaceSourceFiles(
@@ -765,12 +767,15 @@ class iic(builder.Module):
                 'sys/dev/iicbus/iicbus.c',
                 'sys/dev/iicbus/iiconf.c',
                 'sys/dev/iicbus/ofw_iicbus.c',
+                'sys/dev/iicbus/iicbb.c',
+                'sys/dev/iicbus/twsi/twsi.c',
             ],
             mm.generator['source']()
         )
         self.addRTEMSSourceFiles(
             [
                 'local/iicbus_if.c',
+                'local/iicbb_if.c',
                 'i2c/rtems-i2c.c',
             ],
             mm.generator['source']()

@@ -226,6 +226,17 @@ $(LOCAL_SRC)/iicbus_if.c: $(FREEBSD_SRC)/sys/dev/iicbus/iicbus_if.m
 	    -e 's|#include "iicbus_if.h"|#include <rtems/bsd/local/iicbus_if.h>|'
 	mv iicbus_if.c $@
 
+$(LOCAL_INC)/iicbb_if.h: $(FREEBSD_SRC)/sys/dev/iicbus/iicbb_if.m
+	awk -f $(TOOLS)/makeobjops.awk $< -h
+	mv iicbb_if.h $@
+
+$(LOCAL_SRC)/iicbb_if.c: $(FREEBSD_SRC)/sys/dev/iicbus/iicbb_if.m
+	awk -f $(TOOLS)/makeobjops.awk $< -c
+	sed -i iicbb_if.c \
+	    -e '1 i\#include <machine/rtems-bsd-kernel-space.h>\n' \
+	    -e 's|#include "iicbb_if.h"|#include <rtems/bsd/local/iicbb_if.h>|'
+	mv iicbb_if.c $@
+
 $(LOCAL_INC)/sdhci_if.h: $(FREEBSD_SRC)/sys/dev/sdhci/sdhci_if.m
 	awk -f $(TOOLS)/makeobjops.awk $< -h
 	mv sdhci_if.h $@
