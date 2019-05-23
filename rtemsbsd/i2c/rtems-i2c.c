@@ -27,11 +27,11 @@ typedef struct i2c_msg i2c_msg;
 
 struct i2c_softc {
 	device_t dev;
-	struct cdev *i2c_cdev;
-	char path[255];
-	int rid;
+	device_t sc_iicbus;
+	char *path;
 	int fd;
-	struct resource *res;
+	int mem_rid;
+	int irq_rid;
 	struct i2c_rdwr_ioctl_data *ioctl_data;
 };
 
@@ -41,10 +41,12 @@ rtems_i2c_probe(device_t dev)
 	if (!ofw_bus_status_okay(dev)) {
 		return (ENXIO);
 	}
+	if (!ofw_bus_is_compatible(dev, "rtems,bsp-i2c")){
+		return (ENXIO);
+	}
 
 	device_set_desc(dev, "RTEMS libbsd I2C");
-
-	return (BUS_PROBE_DEFAULT);
+	return (BUS_PROBE_SPECIFIC);
 }
 
 static int
@@ -55,34 +57,25 @@ rtems_i2c_attach(device_t dev)
 	char *compat;
 	char *curstr;
 	struct i2c_softc *sc;
+	int len;
 
 	sc = device_get_softc(dev);
 	sc->dev = dev;
-	sc->rid = 0;
+	node = ofw_bus_get_node(sc->dev);
 
-	sc->res = bus_alloc_resource_any(sc->dev, SYS_RES_MEMORY, &sc->rid, RF_ACTIVE);
-	if (sc->res == NULL){
-		device_printf(sc->dev, "Could not allocate resources");
+	len = OF_getprop(node, "rtems,i2c-path", &sc->path, sizeof(sc->path));
+	if (len == -1){
+		device_printf(sc->dev, "Path not found in Device Tree");
 		return (ENXIO);
 	}
-
-	node = ofw_bus_get_node(sc->dev);
-	compatlen = OF_getprop(node, "compatible", compat,
-	sizeof(compat));
-	if (compatlen != -1) {
-		for (curstr = compat; curstr < compat + compatlen;
-		curstr += strlen(curstr) + 1) {
-		if (strncmp(curstr, "rtems,bsp-i2c", 13) == 0)
-			if (OF_getprop(node, "rtems,i2c-path", sc->path,
-				 sizeof(sc->path)) != sizeof(sc->path)){
-				return (ENXIO);
-			}
-			else{
-				config_intrhook_oneshot((ich_func_t)bus_generic_attach, dev);
-				return (0);
-			}
+	else{
+		if ((sc->sc_iicbus = device_add_child(sc->dev, "iicbus", -1)) == NULL) {
+			device_printf(sc->dev, "could not allocate iicbus instance\n");
+			return (ENXIO);
 		}
+		config_intrhook_oneshot((ich_func_t)bus_generic_attach, sc->dev);
 	}
+	return (0);
 }
 
 static int
@@ -93,16 +86,13 @@ rtems_i2c_detach(device_t dev)
 
 	sc = device_get_softc(dev);
 
-	if (sc->i2c_cdev)
-		destroy_dev(sc->i2c_cdev);
-
 	if ((error = bus_generic_detach(sc->dev)) != 0) {
 		device_printf(sc->dev, "cannot detach child devices\n");
 		return (error);
 	}
-	
-	if (sc->res != NULL)
-		bus_release_resource(sc->dev, SYS_RES_MEMORY, sc->rid, sc->res);
+
+	if (sc->sc_iicbus && (error = device_delete_child(dev, sc->sc_iicbus)) != 0)
+        return (error);
 
 	return (0);
 }
@@ -158,8 +148,10 @@ static device_method_t rtems_i2c_methods[] = {
 static driver_t rtems_i2c_driver = {
 	"rtems_i2c",
 	rtems_i2c_methods,
-	0
+	sizeof(struct i2c_softc),
 };
 
 static devclass_t rtems_i2c_devclass;
-DRIVER_MODULE(rtems_i2c, iicbus, rtems_i2c_driver, rtems_i2c_devclass, 0, 0);
+DRIVER_MODULE(rtems_i2c, simplebus, rtems_i2c_driver, rtems_i2c_devclass, 0, 0);
+DRIVER_MODULE(iicbus, rtems_i2c, iicbus_driver, iicbus_devclass, 0, 0);
+DRIVER_MODULE(ofw_iicbus, rtems_i2c, ofw_iicbus_driver, ofw_iicbus_devclass, 0, 0);
