@@ -125,6 +125,7 @@ _defaults = {
      ('freebsd/sys/sys',                        '**/*.h',                          'sys'),
      ('freebsd/sys/vm',                         '**/*.h',                          'vm'),
      ('freebsd/sys/dev/mii',                    '**/*.h',                          'dev/mii'),
+     ('freebsd/sys/dev/iicbus',                 '**/*.h',                          'dev/iicbus'), 
      ('linux/include',                          '**/*.h',                          ''),
      ('mDNSResponder/mDNSCore',                 'mDNSDebug.h',                     ''),
      ('mDNSResponder/mDNSCore',                 'mDNSEmbeddedAPI.h',               ''),
