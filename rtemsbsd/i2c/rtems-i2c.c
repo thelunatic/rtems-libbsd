@@ -1,3 +1,29 @@
+/*
+ * Copyright (c) 2019 Vijay Kumar Banerjee <vijaykumar9597@gmail.com>. 
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
 #include <machine/rtems-bsd-kernel-space.h>
 
 #include <stdlib.h>
@@ -106,6 +132,7 @@ rtems_i2c_transfer(device_t dev, struct iic_msg *msgs, u_int num)
 	struct i2c_softc *sc;
 
 	sc = device_get_softc(dev);
+    printk("\n THE TRANSFER FUNCTION IS REACHED \n");
 
 	/* Open /dev/iic0 */
 	sc->fd = open(sc->path, O_RDWR);
@@ -120,7 +147,7 @@ rtems_i2c_transfer(device_t dev, struct iic_msg *msgs, u_int num)
 	sc->ioctl_data->nmsgs = num;
 
 	/* IOCTL call to write */
-	err = ioctl(sc->fd, I2C_RDWR, &sc->ioctl_data);
+	err = ioctl(sc->fd, I2CRDWR, &sc->ioctl_data);
 	if (err < 0){
 		device_printf(sc->dev, "%s\n", strerror(errno));
 		close(sc->fd);
@@ -134,7 +161,10 @@ rtems_i2c_transfer(device_t dev, struct iic_msg *msgs, u_int num)
 }
 
 static int
-rtems_i2c_reset(device_t dev, u_char speed, u_char addr, u_char *oldaddr){}
+rtems_i2c_reset(device_t dev, u_char speed, u_char addr, u_char *oldaddr)
+{
+	return (0);
+}
 
 static device_method_t rtems_i2c_methods[] = {
 	DEVMETHOD(device_probe,		rtems_i2c_probe),
