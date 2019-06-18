@@ -758,6 +758,7 @@ class iic(builder.Module):
                 'sys/dev/iicbus/iicbus.h',
                 'sys/dev/iicbus/iic.h',
                 'sys/dev/iicbus/iiconf.h',
+                'sys/arm/ti/ti_i2c.h',
             ]
         )
         self.addKernelSpaceSourceFiles(
@@ -766,6 +767,7 @@ class iic(builder.Module):
                 'sys/dev/iicbus/iicbus.c',
                 'sys/dev/iicbus/iiconf.c',
                 'sys/dev/iicbus/ofw_iicbus.c',
+                'sys/arm/ti/ti_i2c.c',
             ],
             mm.generator['source']()
         )
@@ -773,6 +775,102 @@ class iic(builder.Module):
             [
                 'local/iicbus_if.c',
                 'sys/dev/iicbus/rtems-i2c.c',
+            ],
+            mm.generator['source']()
+        )
+
+#
+# TDA
+#
+class tda(builder.Module):
+
+    def __init__(self, manager):
+        super(tda, self).__init__(manager, type(self).__name__)
+
+    def generate(self):
+        mm = self.manager
+        self.addKernelSpaceHeaderFiles(
+            [
+                'sys/dev/extres/clk/clk.h',
+                'sys/dev/hdmi/dwc_hdmi.h',
+                'sys/dev/hdmi/dwc_hdmireg.h',
+                'sys/dev/videomode/videomode.h',
+                'sys/dev/videomode/edidvar.h',
+                'sys/dev/videomode/edidreg.h',
+                'sys/dev/videomode/ediddevs.h',
+                'sys/dev/videomode/ediddevs_data.h',
+                'sys/dev/videomode/vesagtf.h',
+            ]
+        )
+        self.addKernelSpaceSourceFiles(
+            [
+                'sys/arm/ti/am335x/tda19988.c',
+                'sys/dev/hdmi/dwc_hdmi.c',
+                'sys/dev/hdmi/dwc_hdmi_fdt.c',
+                'sys/dev/extres/clk/clk.c',
+                'sys/dev/videomode/pickmode.c',
+                'sys/dev/videomode/edid.c',
+                'sys/dev/videomode/vesagtf.c',
+                'sys/dev/videomode/videomode.c',
+            ],
+            mm.generator['source']()
+        )
+        self.addRTEMSSourceFiles(
+            [
+                'local/clknode_if.c',
+                'local/hdmi_if.c',
+            ],
+            mm.generator['source']()
+        )
+
+#
+# FB_TI
+#
+class fb_ti(builder.Module):
+
+    def __init__(self, manager):
+        super(fb_ti, self).__init__(manager, type(self).__name__)
+
+    def generate(self):
+        mm = self.manager
+        self.addKernelSpaceHeaderFiles(
+            [
+                'sys/sys/fbio.h',
+                'sys/sys/power.h',
+                'sys/sys/_eventhandler.h',
+                'sys/sys/consio.h',
+                'sys/sys/terminal.h',
+                'sys/dev/fb/fbreg.h',
+                'sys/dev/syscons/syscons.h',
+                'sys/dev/vt/vt.h',
+                'sys/arm/ti/am335x/am335x_lcd.h',
+                'sys/arm/ti/am335x/am335x_pwm.h',
+                'sys/dev/vt/hw/fb/vt_fb.h',
+                'sys/arm/include/pmap.h',
+                'sys/arm/include/vm.h',
+                'sys/vm/vm.h',
+                'sys/vm/pmap.h',
+                'sys/dev/vt/colors/vt_termcolors.h',
+                'sys/teken/teken.h',
+                'sys/arm/include/bus.h',
+            ]
+        )
+        self.addKernelSpaceSourceFiles(
+            [
+                'sys/dev/fb/fb.c',
+                'sys/arm/ti/am335x/am335x_lcd.c',
+                'sys/arm/ti/am335x/am335x_lcd_syscons.c',
+                'sys/arm/ti/am335x/am335x_pwmss.c',
+                'sys/arm/ti/am335x/am335x_ecap.c',
+                'sys/dev/fb/fbd.c',
+                'sys/dev/vt/hw/fb/vt_fb.c',
+                'sys/dev/vt/hw/fb/vt_early_fb.c',
+            ],
+            mm.generator['source']()
+        )
+        self.addRTEMSSourceFiles(
+            [
+                'local/fb_if.c',
             ],
             mm.generator['source']()
         )
@@ -5134,6 +5232,8 @@ def load(mm):
     mm.addModule(dev_input(mm))
     mm.addModule(evdev(mm))
     mm.addModule(iic(mm))
+    mm.addModule(tda(mm))
+    mm.addModule(fb_ti(mm))
 
     mm.addModule(dev_usb(mm))
     mm.addModule(dev_usb_controller(mm))

@@ -211,5 +211,5 @@ static driver_t rtems_i2c_driver = {
 
 static devclass_t rtems_i2c_devclass;
 DRIVER_MODULE(rtems_i2c, simplebus, rtems_i2c_driver, rtems_i2c_devclass, 0, 0);
-DRIVER_MODULE(iicbus, rtems_i2c, iicbus_driver, iicbus_devclass, 0, 0);
-DRIVER_MODULE(ofw_iicbus, rtems_i2c, ofw_iicbus_driver, ofw_iicbus_devclass, 0, 0);
+//DRIVER_MODULE(iicbus, rtems_i2c, iicbus_driver, iicbus_devclass, 0, 0);
+//DRIVER_MODULE(ofw_iicbus, rtems_i2c, ofw_iicbus_driver, ofw_iicbus_devclass, 0, 0);
