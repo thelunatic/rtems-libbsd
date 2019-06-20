@@ -168,6 +168,9 @@ typedef	uintptr_t bus_space_handle_t;
  * Map a region of device bus space into CPU virtual address space.
  */
 
+#define BUS_SPACE_MAP_PREFETCHABLE 0x04
+extern bus_space_tag_t fdtbus_bs_tag;
+
 static __inline int
 bus_space_map(bus_space_tag_t t __unused, bus_addr_t addr,
 	      bus_size_t size __unused, int flags __unused,
