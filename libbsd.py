@@ -833,10 +833,6 @@ class display(builder.Module):
                 'sys/arm/ti/am335x/am335x_lcd_syscons.c',
                 'sys/arm/ti/am335x/am335x_pwmss.c',
                 'sys/arm/ti/am335x/am335x_ecap.c',
-                'sys/dev/fb/fbd.c',
-                'sys/dev/vt/hw/fb/vt_fb.c',
-                'sys/dev/vt/hw/fb/vt_early_fb.c',
-                'sys/dev/vt/vt_core.c',
             ],
             mm.generator['source']()
         )
