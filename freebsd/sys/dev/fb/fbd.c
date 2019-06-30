@@ -82,7 +82,9 @@ static d_close_t	fb_close;
 static d_read_t		fb_read;
 static d_write_t	fb_write;
 static d_ioctl_t	fb_ioctl;
+#ifndef __rtems__
 static d_mmap_t		fb_mmap;
+#endif /* __rtems__ */
 
 static struct cdevsw fb_cdevsw = {
 	.d_version =	D_VERSION,
@@ -92,7 +94,9 @@ static struct cdevsw fb_cdevsw = {
 	.d_read =	fb_read,
 	.d_write =	fb_write,
 	.d_ioctl =	fb_ioctl,
+#ifndef __rtems__
 	.d_mmap =	fb_mmap,
+#endif /* __rtems__ */
 	.d_name =	"fb",
 };
 
@@ -257,11 +261,13 @@ fbd_register(struct fb_info* info)
 	err = fb_init(entry, framebuffer_dev_unit++);
 	if (err)
 		return (err);
+#ifndef __rtems__
 	if (first) {
 		err = vt_fb_attach(info);
 		if (err)
 			return (err);
 	}
+#endif /* __rtems__ */
 
 	return (0);
 }
@@ -274,8 +280,10 @@ fbd_unregister(struct fb_info* info)
 	LIST_FOREACH_SAFE(entry, &fb_list_head, fb_list, tmp) {
 		if (entry->fb_info == info) {
 			LIST_REMOVE(entry, fb_list);
+#ifndef __rtems__
 			if (LIST_EMPTY(&fb_list_head))
 				vt_fb_detach(info);
+#endif /* __rtems__ */
 			free(entry, M_DEVBUF);
 			return (0);
 		}
@@ -366,6 +374,9 @@ driver_t fbd_driver = {
 devclass_t	fbd_devclass;
 
 DRIVER_MODULE(fbd, fb, fbd_driver, fbd_devclass, 0, 0);
+#ifdef __rtems__
+DRIVER_MODULE(fbd, am335x_lcd, fbd_driver, fbd_devclass, 0, 0);
+#endif /* __rtems__ */
 DRIVER_MODULE(fbd, drmn, fbd_driver, fbd_devclass, 0, 0);
 DRIVER_MODULE(fbd, udl, fbd_driver, fbd_devclass, 0, 0);
 MODULE_VERSION(fbd, 1);
