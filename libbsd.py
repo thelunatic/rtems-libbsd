@@ -799,6 +799,14 @@ class display(builder.Module):
                 'sys/dev/videomode/ediddevs.h',
                 'sys/dev/videomode/ediddevs_data.h',
                 'sys/dev/videomode/vesagtf.h',
+                'sys/arm/ti/am335x/am335x_lcd.h',
+                'sys/arm/ti/am335x/am335x_pwm.h',
+                'sys/dev/fb/fbreg.h',
+                'sys/dev/vt/vt.h',
+                'sys/teken/teken.h',
+                'sys/sys/fbio.h',
+                'sys/sys/consio.h',
+                'sys/sys/terminal.h',
             ]
         )
         self.addKernelSpaceSourceFiles(
@@ -811,6 +819,9 @@ class display(builder.Module):
                 'sys/dev/videomode/edid.c',
                 'sys/dev/videomode/vesagtf.c',
                 'sys/dev/videomode/videomode.c',
+                'sys/arm/ti/am335x/am335x_lcd.c',
+                'sys/arm/ti/am335x/am335x_pwmss.c',
+                'sys/arm/ti/am335x/am335x_ecap.c',
             ],
             mm.generator['source']()
         )
@@ -818,6 +829,7 @@ class display(builder.Module):
             [
                 'local/clknode_if.c',
                 'local/hdmi_if.c',
+                'local/fb_if.c',
             ],
             mm.generator['source']()
         )
