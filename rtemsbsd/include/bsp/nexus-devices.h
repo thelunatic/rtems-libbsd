@@ -61,6 +61,8 @@ SYSINIT_DRIVER_REFERENCE(sdhci_ti, simplebus);
 SYSINIT_DRIVER_REFERENCE(mmcsd, mmc);
 SYSINIT_DRIVER_REFERENCE(cpsw, cpswss);
 SYSINIT_DRIVER_REFERENCE(ukphy, miibus);
+SYSINIT_DRIVER_REFERENCE(am335x_lcd, simplebus);
+SYSINIT_DRIVER_REFERENCE(am335x_pwmss, simplebus);
 SYSINIT_DRIVER_REFERENCE(rtems_i2c, simplebus);
 SYSINIT_DRIVER_REFERENCE(ofw_iicbus, rtems_i2c);
 SYSINIT_DRIVER_REFERENCE(iic, iicbus);
