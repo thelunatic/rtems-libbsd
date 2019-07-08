@@ -387,6 +387,15 @@ devfs_imfs_kqfilter(rtems_libio_t *iop, struct knote *kn)
 	return error;
 }
 
+static int
+devfs_imfs_mmap(rtems_libio_t *iop, void **addr, size_t len, int prot,
+    off_t off)
+{
+	struct cdev *cdev = devfs_imfs_get_context_by_iop(iop);
+
+	return (cdev->si_devsw->d_mmap( cdev, off, (vm_paddr_t *) addr, prot, VM_MEMATTR_DEFAULT));
+}
+
 static const rtems_filesystem_file_handlers_r devfs_imfs_handlers = {
 	.open_h = devfs_imfs_open,
 	.close_h = devfs_imfs_close,
@@ -403,6 +412,7 @@ static const rtems_filesystem_file_handlers_r devfs_imfs_handlers = {
 	.kqfilter_h = devfs_imfs_kqfilter,
 	.readv_h = devfs_imfs_readv,
 	.writev_h = devfs_imfs_writev,
+	.mmap_h = devfs_imfs_mmap,
 };
 
 static const IMFS_node_control devfs_imfs_control = IMFS_GENERIC_INITIALIZER(

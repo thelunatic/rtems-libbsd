@@ -59,6 +59,9 @@ __FBSDID("$FreeBSD$");
 #include <vm/pmap.h>
 
 #include <rtems/bsd/local/fb_if.h>
+#ifdef __rtems__
+#define vtophys(a) (a)
+#endif /* __rtems__ */
 
 LIST_HEAD(fb_list_head_t, fb_list_entry) fb_list_head =
     LIST_HEAD_INITIALIZER(fb_list_head);
@@ -82,9 +85,7 @@ static d_close_t	fb_close;
 static d_read_t		fb_read;
 static d_write_t	fb_write;
 static d_ioctl_t	fb_ioctl;
-#ifndef __rtems__
 static d_mmap_t		fb_mmap;
-#endif /* __rtems__ */
 
 static struct cdevsw fb_cdevsw = {
 	.d_version =	D_VERSION,
@@ -94,9 +95,7 @@ static struct cdevsw fb_cdevsw = {
 	.d_read =	fb_read,
 	.d_write =	fb_write,
 	.d_ioctl =	fb_ioctl,
-#ifndef __rtems__
 	.d_mmap =	fb_mmap,
-#endif /* __rtems__ */
 	.d_name =	"fb",
 };
 
