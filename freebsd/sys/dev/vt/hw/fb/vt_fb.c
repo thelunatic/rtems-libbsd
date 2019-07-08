@@ -51,10 +51,12 @@ static struct vt_driver vt_fb_driver = {
 	.vd_init = vt_fb_init,
 	.vd_fini = vt_fb_fini,
 	.vd_blank = vt_fb_blank,
+#ifndef __rtems__
 	.vd_bitblt_text = vt_fb_bitblt_text,
 	.vd_invalidate_text = vt_fb_invalidate_text,
 	.vd_bitblt_bmp = vt_fb_bitblt_bitmap,
 	.vd_drawrect = vt_fb_drawrect,
+#endif /* __rtems__ */
 	.vd_setpixel = vt_fb_setpixel,
 	.vd_postswitch = vt_fb_postswitch,
 	.vd_priority = VD_PRIORITY_GENERIC+10,

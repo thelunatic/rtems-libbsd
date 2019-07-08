@@ -47,7 +47,9 @@ __FBSDID("$FreeBSD$");
 #include <sys/lock.h>
 #include <sys/malloc.h>
 #include <sys/mutex.h>
+#ifndef __rtems__
 #include <sys/power.h>
+#endif /* __rtems__ */
 #include <sys/priv.h>
 #include <sys/proc.h>
 #include <sys/random.h>
@@ -83,6 +85,7 @@ static tc_opened_t	vtterm_opened;
 static tc_ioctl_t	vtterm_ioctl;
 static tc_mmap_t	vtterm_mmap;
 
+#ifndef __rtems__
 const struct terminal_class vt_termclass = {
 	.tc_bell	= vtterm_bell,
 	.tc_cursor	= vtterm_cursor,
@@ -104,6 +107,7 @@ const struct terminal_class vt_termclass = {
 	.tc_ioctl	= vtterm_ioctl,
 	.tc_mmap	= vtterm_mmap,
 };
+#endif /* __rtems__ */
 
 /*
  * Use a constant timer of 25 Hz to redraw the screen.
@@ -129,6 +133,7 @@ static VT_SYSCTL_INT(debug, 0, "vt(9) debug level");
 static VT_SYSCTL_INT(deadtimer, 15, "Time to wait busy process in VT_PROCESS mode");
 static VT_SYSCTL_INT(suspendswitch, 1, "Switch to VT0 before suspend");
 
+#ifndef __rtems__
 /* Allow to disable some keyboard combinations. */
 static VT_SYSCTL_INT(kbd_halt, 1, "Enable halt keyboard combination.  "
     "See kbdmap(5) to configure.");
@@ -149,11 +154,13 @@ VT_SYSCTL_INT(splash_ncpu, 0, "Override number of logos displayed "
 VT_SYSCTL_INT(splash_cpu_style, 2, "Draw logo style "
     "(0 = Alternate beastie, 1 = Beastie, 2 = Orb)");
 VT_SYSCTL_INT(splash_cpu_duration, 10, "Hide logos after (seconds)");
+#endif /* __rtems__ */
 
 static unsigned int vt_unit = 0;
 static MALLOC_DEFINE(M_VT, "vt", "vt device");
 struct vt_device *main_vd = &vt_consdev;
 
+#ifndef __rtems__
 /* Boot logo. */
 extern unsigned int vt_logo_width;
 extern unsigned int vt_logo_height;
@@ -169,6 +176,7 @@ extern struct vt_font vt_font_default;
 #ifndef SC_NO_CUTPASTE
 extern struct vt_mouse_cursor vt_default_mouse_pointer;
 #endif
+#endif /* __rtems__ */
 
 static int signal_vt_rel(struct vt_window *);
 static int signal_vt_acq(struct vt_window *);
@@ -206,6 +214,7 @@ struct vt_device	vt_consdev = {
 	.vd_windows = { [VT_CONSWINDOW] =  &vt_conswindow, },
 	.vd_curwindow = &vt_conswindow,
 	.vd_kbstate = 0,
+#ifndef __rtems__
 #ifndef SC_NO_CUTPASTE
 	.vd_pastebuf = {
 		.vpb_buf = NULL,
@@ -216,6 +225,7 @@ struct vt_device	vt_consdev = {
 	.vd_mcursor_fg = TC_WHITE,
 	.vd_mcursor_bg = TC_BLACK,
 #endif
+#endif /* __rtems__ */
 
 #ifndef SC_NO_CONSDRAWN
 	.vd_drawn = vt_consdrawn,
@@ -247,6 +257,7 @@ static struct vt_window	vt_conswindow = {
 	.vw_kbdmode = K_XLATE,
 	.vw_grabbed = 0,
 };
+#ifndef __rtems__
 struct terminal vt_consterm = {
 	.tm_class = &vt_termclass,
 	.tm_softc = &vt_conswindow,
@@ -270,14 +281,17 @@ SYSINIT(vt_update_static, SI_SUB_KMEM, SI_ORDER_ANY, vt_update_static,
 /* Delay until all devices attached, to not waste time. */
 SYSINIT(vt_early_cons, SI_SUB_INT_CONFIG_HOOKS, SI_ORDER_ANY, vt_upgrade,
     &vt_consdev);
+#endif /* __rtems__ */
 
 /* Initialize locks/mem depended members. */
 static void
 vt_update_static(void *dummy)
 {
 
+#ifndef __rtems__
 	if (!vty_enabled(VTY_VT))
 		return;
+#endif /* __rtems__ */
 	if (main_vd->vd_driver != NULL)
 		printf("VT(%s): %s %ux%u\n", main_vd->vd_driver->vd_name,
 		    (main_vd->vd_flags & VDF_TEXTMODE) ? "text" : "resolution",
@@ -339,6 +353,7 @@ vt_switch_timer(void *arg)
 	vt_late_window_switch((struct vt_window *)arg);
 }
 
+#ifndef __rtems__
 static int
 vt_save_kbd_mode(struct vt_window *vw, keyboard_t *kbd)
 {
@@ -429,6 +444,7 @@ vt_update_kbd_leds(struct vt_window *vw, keyboard_t *kbd)
 
 	return (ret);
 }
+#endif /* __rtems__ */
 
 static int
 vt_window_preswitch(struct vt_window *vw, struct vt_window *curvw)
@@ -454,6 +470,7 @@ vt_window_postswitch(struct vt_window *vw)
 	return (0);
 }
 
+#ifndef __rtems__
 /* vt_late_window_switch will done VT switching for regular case. */
 static int
 vt_late_window_switch(struct vt_window *vw)
@@ -2832,6 +2849,7 @@ vt_replace_backend(const struct vt_driver *drv, void *softc)
 	 */
 	termcn_cnregister(vd->vd_windows[VT_CONSWINDOW]->vw_terminal);
 }
+#endif /* __rtems__ */
 
 static void
 vt_suspend_handler(void *priv)
@@ -2859,8 +2877,10 @@ void
 vt_allocate(const struct vt_driver *drv, void *softc)
 {
 
+#ifndef __rtems__
 	if (!vty_enabled(VTY_VT))
 		return;
+#endif /* __rtems__ */
 
 	if (main_vd->vd_driver == NULL) {
 		main_vd->vd_driver = drv;
@@ -2880,15 +2900,19 @@ vt_allocate(const struct vt_driver *drv, void *softc)
 		    main_vd->vd_driver->vd_name, drv->vd_name);
 	}
 
+#ifndef __rtems__
 	vt_replace_backend(drv, softc);
+#endif /* __rtems__ */
 }
 
 void
 vt_deallocate(const struct vt_driver *drv, void *softc)
 {
 
+#ifndef __rtems__
 	if (!vty_enabled(VTY_VT))
 		return;
+#endif /* __rtems__ */
 
 	if (main_vd->vd_prev_driver == NULL ||
 	    main_vd->vd_driver != drv ||
@@ -2898,7 +2922,9 @@ vt_deallocate(const struct vt_driver *drv, void *softc)
 	printf("VT: Switching back from \"%s\" to \"%s\".\n",
 	    main_vd->vd_driver->vd_name, main_vd->vd_prev_driver->vd_name);
 
+#ifndef __rtems__
 	vt_replace_backend(NULL, NULL);
+#endif /* __rtems__ */
 }
 
 void
@@ -2910,8 +2936,10 @@ vt_suspend(struct vt_device *vd)
 		return;
 	/* Save current window. */
 	vd->vd_savedwindow = vd->vd_curwindow;
+#ifndef __rtems__
 	/* Ask holding process to free window and switch to console window */
 	vt_proc_window_switch(vd->vd_windows[VT_CONSWINDOW]);
+#endif /* __rtems__ */
 
 	/* Wait for the window switch to complete. */
 	error = 0;
@@ -2927,7 +2955,9 @@ vt_resume(struct vt_device *vd)
 
 	if (vt_suspendswitch == 0)
 		return;
+#ifndef __rtems__
 	/* Switch back to saved window, if any */
 	vt_proc_window_switch(vd->vd_savedwindow);
+#endif /* __rtems__ */
 	vd->vd_savedwindow = NULL;
 }
