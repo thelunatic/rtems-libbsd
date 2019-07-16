@@ -163,6 +163,7 @@ static video_switch_t am335x_sysconsvidsw = {
 	.get_info		= am335x_syscons_get_info,
 	.query_mode		= am335x_syscons_query_mode,
 	.set_mode		= am335x_syscons_set_mode,
+#ifndef __rtems__
 	.save_font		= am335x_syscons_save_font,
 	.load_font		= am335x_syscons_load_font,
 	.show_font		= am335x_syscons_show_font,
@@ -175,6 +176,7 @@ static video_switch_t am335x_sysconsvidsw = {
 	.read_hw_cursor		= am335x_syscons_read_hw_cursor,
 	.set_hw_cursor		= am335x_syscons_set_hw_cursor,
 	.set_hw_cursor_shape	= am335x_syscons_set_hw_cursor_shape,
+#endif /* __rtems__ */
 	.blank_display		= am335x_syscons_blank_display,
 	.mmap			= am335x_syscons_mmap,
 	.ioctl			= am335x_syscons_ioctl,
@@ -182,6 +184,7 @@ static video_switch_t am335x_sysconsvidsw = {
 	.fill_rect		= am335x_syscons_fill_rect,
 	.bitblt			= am335x_syscons_bitblt,
 	.diag			= am335x_syscons_diag,
+#ifndef __rtems__
 	.save_cursor_palette	= am335x_syscons_save_cursor_palette,
 	.load_cursor_palette	= am335x_syscons_load_cursor_palette,
 	.copy			= am335x_syscons_copy,
@@ -189,6 +192,7 @@ static video_switch_t am335x_sysconsvidsw = {
 	.putc			= am335x_syscons_putc,
 	.puts			= am335x_syscons_puts,
 	.putm			= am335x_syscons_putm,
+#endif /* __rtems__ */
 };
 
 VIDEO_DRIVER(am335x_syscons, am335x_sysconsvidsw, am335x_syscons_configure);
@@ -210,6 +214,7 @@ static vr_draw_mouse_t am335x_rend_draw_mouse;
 static sc_rndr_sw_t am335x_rend = {
 	am335x_rend_init,
 	am335x_rend_clear,
+#ifndef __rtems__
 	am335x_rend_draw_border,
 	am335x_rend_draw,
 	am335x_rend_set_cursor,
@@ -217,6 +222,7 @@ static sc_rndr_sw_t am335x_rend = {
 	am335x_rend_blink_cursor,
 	am335x_rend_set_mouse,
 	am335x_rend_draw_mouse
+#endif /* __rtems__ */
 };
 
 RENDERER(am335x_syscons, 0, am335x_rend, gfb_set);
@@ -237,6 +243,7 @@ am335x_rend_draw_border(scr_stat* scp, int color)
 {
 }
 
+#ifndef __rtems__
 static void
 am335x_rend_draw(scr_stat* scp, int from, int count, int flip)
 {
@@ -327,6 +334,7 @@ am335x_rend_draw_mouse(scr_stat* scp, int x, int y, int on)
 {
 	vidd_putm(scp->sc->adp, x, y, mouse_pointer, 0xffffffff, 16, 8);
 }
+#endif /* __rtems__ */
 
 static uint16_t am335x_syscons_static_window[ROW*COL];
 extern u_char dflt_font_16[];
@@ -425,9 +433,11 @@ am335x_syscons_init(int unit, video_adapter_t *adp, int flags)
 
 	vid_init_struct(adp, "am335x_syscons", -1, unit);
 
+#ifndef __rtems__
 	sc->font = dflt_font_16;
 	vi->vi_cheight = AM335X_FONT_HEIGHT;
 	vi->vi_cwidth = 8;
+#endif /* __rtems__ */
 
 	vi->vi_width = sc->width/8;
 	vi->vi_height = sc->height/vi->vi_cheight;
@@ -478,6 +488,7 @@ am335x_syscons_save_font(video_adapter_t *adp, int page, int size, int width,
 	return (0);
 }
 
+#ifndef __rtems__
 static int
 am335x_syscons_load_font(video_adapter_t *adp, int page, int size, int width,
     u_char *data, int c, int count)
@@ -551,6 +562,7 @@ am335x_syscons_set_hw_cursor_shape(video_adapter_t *adp, int base, int height,
 {
 	return (0);
 }
+#endif /* __rtems__ */
 
 static int
 am335x_syscons_blank_display(video_adapter_t *adp, int mode)
@@ -670,6 +682,7 @@ am335x_syscons_putp(video_adapter_t *adp, vm_offset_t off, uint32_t p, uint32_t 
 	return (0);
 }
 
+#ifndef __rtems__
 static int
 am335x_syscons_putc(video_adapter_t *adp, vm_offset_t off, uint8_t c, uint8_t a)
 {
@@ -791,3 +804,4 @@ dummy_kbd_configure(int flags)
 	return (0);
 }
 KEYBOARD_DRIVER(am335x_dummy, am335x_dummysw, dummy_kbd_configure);
+#endif /* __rtems__ */

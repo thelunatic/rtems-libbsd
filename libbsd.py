@@ -809,6 +809,7 @@ class display(builder.Module):
                 'sys/sys/terminal.h',
                 'sys/dev/vt/hw/fb/vt_fb.h',
                 'sys/dev/vt/colors/vt_termcolors.h',
+                'sys/dev/fb/splashreg.h',
             ]
         )
         self.addKernelSpaceSourceFiles(
@@ -828,6 +829,9 @@ class display(builder.Module):
                 'sys/dev/vt/hw/fb/vt_fb.c',
                 'sys/dev/vt/vt_core.c',
                 'sys/dev/vt/colors/vt_termcolors.c',
+                'sys/arm/ti/am335x/am335x_lcd_syscons.c',
+                'sys/dev/syscons/scvidctl.c',
+                'sys/dev/syscons/syscons.c',
             ],
             mm.generator['source']()
         )

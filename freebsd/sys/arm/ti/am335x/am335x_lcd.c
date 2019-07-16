@@ -936,6 +936,9 @@ am335x_lcd_probe(device_t dev)
 
 	device_set_desc(dev, "AM335x LCD controller");
 
+#ifdef __rtems__
+	vid_configure(0);
+#endif /* __rtems__ */
 #ifdef DEV_SC
 	err = sc_probe_unit(device_get_unit(dev), 
 	    device_get_flags(dev) | SC_AUTODETECT_KBD);

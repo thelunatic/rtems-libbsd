@@ -2779,6 +2779,7 @@
 #define	machclk_per_tick _bsd_machclk_per_tick
 #define	machclk_usepcc _bsd_machclk_usepcc
 #define	m_adj _bsd_m_adj
+#define	main_vd _bsd_main_vd
 #define	make_dev _bsd_make_dev
 #define	make_dev_alias _bsd_make_dev_alias
 #define	make_dev_args_init_impl _bsd_make_dev_args_init_impl
@@ -4113,6 +4114,13 @@
 #define	scope6_init _bsd_scope6_init
 #define	scope6_ioctl _bsd_scope6_ioctl
 #define	scope6_setdefault _bsd_scope6_setdefault
+#define	sc_probe_unit _bsd_sc_probe_unit
+#define	sc_render_add _bsd_sc_render_add
+#define	sc_render_match _bsd_sc_render_match
+#define	sc_render_remove _bsd_sc_render_remove
+#define	sc_set_graphics_mode _bsd_sc_set_graphics_mode
+#define	sc_set_pixel_mode _bsd_sc_set_pixel_mode
+#define	sc_set_text_mode _bsd_sc_set_text_mode
 #define	scsi_attrib_ascii_sbuf _bsd_scsi_attrib_ascii_sbuf
 #define	scsi_attrib_hexdump_sbuf _bsd_scsi_attrib_hexdump_sbuf
 #define	scsi_attrib_int_sbuf _bsd_scsi_attrib_int_sbuf
@@ -4169,6 +4177,7 @@
 #define	scsi_test_unit_ready _bsd_scsi_test_unit_ready
 #define	scsi_transportid_sbuf _bsd_scsi_transportid_sbuf
 #define	scsi_write_same _bsd_scsi_write_same
+#define	sc_support_pixel_mode _bsd_sc_support_pixel_mode
 #define	SCTP6_ARE_ADDR_EQUAL _bsd_SCTP6_ARE_ADDR_EQUAL
 #define	sctp6_ctlinput _bsd_sctp6_ctlinput
 #define	sctp6_input _bsd_sctp6_input
@@ -4491,6 +4500,8 @@
 #define	sctp_wakeup_iterator _bsd_sctp_wakeup_iterator
 #define	sctp_wakeup_log _bsd_sctp_wakeup_log
 #define	sctp_wakeup_the_read_socket _bsd_sctp_wakeup_the_read_socket
+#define	sc_user_ioctl _bsd_sc_user_ioctl
+#define	sc_vid_ioctl _bsd_sc_vid_ioctl
 #define	sdhci_cleanup_slot _bsd_sdhci_cleanup_slot
 #define	sdhci_fdt_gpio_get_present _bsd_sdhci_fdt_gpio_get_present
 #define	sdhci_fdt_gpio_get_readonly _bsd_sdhci_fdt_gpio_get_readonly
@@ -4721,6 +4732,7 @@
 #define	sppp_pick _bsd_sppp_pick
 #define	sprintf _bsd_sprintf
 #define	_start_set_crypto_set _bsd__start_set_crypto_set
+#define	_start_set_gfb_set _bsd__start_set_gfb_set
 #define	_start_set_ieee80211_ioctl_getset _bsd__start_set_ieee80211_ioctl_getset
 #define	_start_set_ieee80211_ioctl_setset _bsd__start_set_ieee80211_ioctl_setset
 #define	_start_set_kbddriver_set _bsd__start_set_kbddriver_set
@@ -4728,9 +4740,13 @@
 #define	_start_set_nexus _bsd__start_set_nexus
 #define	_start_set_ratectl_set _bsd__start_set_ratectl_set
 #define	_start_set_scanner_set _bsd__start_set_scanner_set
+#define	_start_set_scrndr_set _bsd__start_set_scrndr_set
+#define	_start_set_set _bsd__start_set_set
 #define	_start_set_sysctl_set _bsd__start_set_sysctl_set
 #define	_start_set_sysinit_set _bsd__start_set_sysinit_set
+#define	_start_set_videodriver_set _bsd__start_set_videodriver_set
 #define	_stop_set_crypto_set _bsd__stop_set_crypto_set
+#define	_stop_set_gfb_set _bsd__stop_set_gfb_set
 #define	_stop_set_ieee80211_ioctl_getset _bsd__stop_set_ieee80211_ioctl_getset
 #define	_stop_set_ieee80211_ioctl_setset _bsd__stop_set_ieee80211_ioctl_setset
 #define	_stop_set_kbddriver_set _bsd__stop_set_kbddriver_set
@@ -4738,8 +4754,11 @@
 #define	_stop_set_nexus _bsd__stop_set_nexus
 #define	_stop_set_ratectl_set _bsd__stop_set_ratectl_set
 #define	_stop_set_scanner_set _bsd__stop_set_scanner_set
+#define	_stop_set_scrndr_set _bsd__stop_set_scrndr_set
+#define	_stop_set_set _bsd__stop_set_set
 #define	_stop_set_sysctl_set _bsd__stop_set_sysctl_set
 #define	_stop_set_sysinit_set _bsd__stop_set_sysinit_set
+#define	_stop_set_videodriver_set _bsd__stop_set_videodriver_set
 #define	subkey_table_gen _bsd_subkey_table_gen
 #define	swi_add _bsd_swi_add
 #define	swi_sched _bsd_swi_sched
@@ -5553,6 +5572,10 @@
 #define	vsnprintf _bsd_vsnprintf
 #define	vsnrprintf _bsd_vsnrprintf
 #define	vsprintf _bsd_vsprintf
+#define	vt_allocate _bsd_vt_allocate
+#define	vt_consdev _bsd_vt_consdev
+#define	vt_consterm _bsd_vt_consterm
+#define	vt_deallocate _bsd_vt_deallocate
 #define	vt_fb_attach _bsd_vt_fb_attach
 #define	vt_fb_bitblt_bitmap _bsd_vt_fb_bitblt_bitmap
 #define	vt_fb_bitblt_text _bsd_vt_fb_bitblt_text
@@ -5568,6 +5591,10 @@
 #define	vt_fb_resume _bsd_vt_fb_resume
 #define	vt_fb_setpixel _bsd_vt_fb_setpixel
 #define	vt_fb_suspend _bsd_vt_fb_suspend
+#define	vt_generate_cons_palette _bsd_vt_generate_cons_palette
+#define	vt_resume _bsd_vt_resume
+#define	vt_resume_flush_timer _bsd_vt_resume_flush_timer
+#define	vt_suspend _bsd_vt_suspend
 #define	wakeup _bsd_wakeup
 #define	wakeup_one _bsd_wakeup_one
 #define	window_deflate _bsd_window_deflate

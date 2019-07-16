@@ -64,15 +64,19 @@ __FBSDID("$FreeBSD$");
 #include <sys/smp.h>
 #include <sys/sysctl.h>
 #include <sys/tty.h>
+#ifndef __rtems__
 #include <sys/power.h>
+#endif /* __rtems__ */
 
 #include <machine/clock.h>
+#ifndef __rtems__
 #if defined(__arm__) || defined(__mips__) || \
 	defined(__powerpc__) || defined(__sparc64__)
 #include <machine/sc_machdep.h>
 #else
 #include <machine/pc/display.h>
 #endif
+#endif /* __rtems__ */
 #if defined( __i386__) || defined(__amd64__)
 #include <machine/psl.h>
 #include <machine/frame.h>
@@ -362,6 +366,7 @@ scvidprobe(int unit, int flags, int cons)
     return (vid_find_adapter("*", unit) >= 0);
 }
 
+#ifndef __rtems__
 /* probe the keyboard, return TRUE if found */
 static int
 sckbdprobe(int unit, int flags, int cons)
@@ -4274,3 +4279,4 @@ sc_allocate_keyboard(sc_softc_t *sc, int unit)
 
 	return (idx0);
 }
+#endif /* __rtems__ */
