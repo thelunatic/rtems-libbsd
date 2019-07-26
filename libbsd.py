@@ -777,6 +777,50 @@ class iic(builder.Module):
             mm.generator['source']()
         )
 
+
+#
+# DISPLAY
+#
+class display(builder.Module):
+
+    def __init__(self, manager):
+        super(display, self).__init__(manager, type(self).__name__)
+
+    def generate(self):
+        mm = self.manager
+        self.addKernelSpaceHeaderFiles(
+            [
+                'sys/dev/extres/clk/clk.h',
+                'sys/dev/hdmi/dwc_hdmi.h',
+                'sys/dev/hdmi/dwc_hdmireg.h',
+                'sys/dev/videomode/videomode.h',
+                'sys/dev/videomode/edidvar.h',
+                'sys/dev/videomode/edidreg.h',
+                'sys/dev/videomode/ediddevs.h',
+                'sys/dev/videomode/ediddevs_data.h',
+                'sys/dev/videomode/vesagtf.h',
+            ]
+        )
+        self.addKernelSpaceSourceFiles(
+            [
+                'sys/arm/ti/am335x/tda19988.c',
+                'sys/dev/hdmi/dwc_hdmi.c',
+                'sys/dev/hdmi/dwc_hdmi_fdt.c',
+                'sys/dev/videomode/pickmode.c',
+                'sys/dev/videomode/edid.c',
+                'sys/dev/videomode/vesagtf.c',
+                'sys/dev/videomode/videomode.c',
+            ],
+            mm.generator['source']()
+        )
+        self.addRTEMSSourceFiles(
+            [
+                'local/clknode_if.c',
+                'local/hdmi_if.c',
+            ],
+            mm.generator['source']()
+        )
+
 #
 # TI PINMUX
 #
@@ -5167,6 +5211,7 @@ def load(mm):
     mm.addModule(evdev(mm))
     mm.addModule(iic(mm))
     mm.addModule(ti_pinmux(mm))
+    mm.addModule(display(mm))
 
     mm.addModule(dev_usb(mm))
     mm.addModule(dev_usb_controller(mm))
