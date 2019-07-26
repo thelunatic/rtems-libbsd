@@ -825,6 +825,9 @@ class display(builder.Module):
                 'sys/arm/ti/am335x/am335x_ecap.c',
                 'sys/dev/fb/fb.c',
                 'sys/dev/fb/fbd.c',
+                'sys/dev/vt/hw/fb/vt_fb.c',
+                'sys/dev/vt/vt_core.c',
+                'sys/dev/vt/colors/vt_termcolors.c',
             ],
             mm.generator['source']()
         )
