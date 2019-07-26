@@ -59,6 +59,9 @@ __FBSDID("$FreeBSD$");
 #include <vm/pmap.h>
 
 #include <rtems/bsd/local/fb_if.h>
+#ifdef __rtems__
+#define vtophys(a) (a)
+#endif /* __rtems__ */
 
 LIST_HEAD(fb_list_head_t, fb_list_entry) fb_list_head =
     LIST_HEAD_INITIALIZER(fb_list_head);
