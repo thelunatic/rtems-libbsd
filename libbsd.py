@@ -845,6 +845,38 @@ class display(builder.Module):
         )
 
 #
+# TI PINMUX
+#
+class ti_pinmux(builder.Module):
+
+    def __init__(self, manager):
+        super(ti_pinmux, self).__init__(manager, type(self).__name__)
+
+    def generate(self):
+        mm = self.manager
+        self.addKernelSpaceHeaderFiles(
+            [
+                'sys/arm/ti/ti_pinmux.h',
+                'sys/arm/ti/omap4/omap4_scm_padconf.h',
+                'sys/arm/ti/am335x/am335x_scm_padconf.h',
+            ]
+        )
+        self.addKernelSpaceSourceFiles(
+            [
+                'sys/arm/ti/ti_pinmux.c',
+                'sys/dev/fdt/fdt_pinctrl.c',
+                'sys/arm/ti/am335x/am335x_scm_padconf.c',
+            ],
+            mm.generator['source']()
+        )
+        self.addRTEMSSourceFiles(
+            [
+                'local/fdt_pinctrl_if.c',
+            ],
+            mm.generator['source']()
+        )
+
+#
 # USB
 #
 class dev_usb(builder.Module):
@@ -5202,6 +5234,7 @@ def load(mm):
     mm.addModule(evdev(mm))
     mm.addModule(iic(mm))
     mm.addModule(display(mm))
+    mm.addModule(ti_pinmux(mm))
 
     mm.addModule(dev_usb(mm))
     mm.addModule(dev_usb_controller(mm))
