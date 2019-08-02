@@ -131,8 +131,13 @@ pinctrl_configure_children(device_t pinctrl, phandle_t parent)
 		if (!ofw_bus_node_status_okay(node))
 			continue;
 		pinctrl_configure_children(pinctrl, node);
+#ifdef __rtems__
+		nconfigs = OF_getencprop_alloc_multi(node, "rtems-pinctrl-0",
+		    sizeof(*configs), (void **)&configs);
+#else /* __rtems__ */
 		nconfigs = OF_getencprop_alloc_multi(node, "pinctrl-0",
 		    sizeof(*configs), (void **)&configs);
+#endif /* __rtems__ */
 		if (nconfigs <= 0)
 			continue;
 		if (bootverbose) {
